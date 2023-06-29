@@ -17,7 +17,6 @@ export const obtenerEmpleado = async (req, res) => {
       "SELECT * FROM empleado WHERE id_empleado = ?",
       [req.params.id]
     );
-    console.log(req.params.id);
     if (rows.length <= 0) {
       return res.status(404).json({
         mensaje: "Empleado no encontrado",
@@ -69,6 +68,24 @@ export const crearEmpleado = async (req, res) => {
       id_rol_empleado,
     });
   } catch (error) {
+    return res.status(500).json({
+      mensaje: "Algo salio mal",
+    });
+  }
+};
+
+export const eliminarEmpleado = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM empleado WHERE id_empleado = ?",
+      [req.params.id,]
+    );
+    if (result.affectedRows > 0) {
+      return res.send("El empleado se ha borrado correctamente");
+    }
+    res.status(404).json({ mensaje: "Empleado no encontrado" });
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({
       mensaje: "Algo salio mal",
     });
